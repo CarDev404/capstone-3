@@ -10,13 +10,10 @@ export default function Home() {
         //discount: "Up to 65% off",
         destination: "/product",
         label: "Shop now!",
-        
     }
 
     const containerStyle = {
-        backgroundImage: 'url("https://i.ibb.co/dj701KP/Bgphoto.jpg")',
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
+        background: 'White', // Set the background color to white
         minHeight: '100vh', // Ensure the container takes up at least the full viewport height
         display: 'flex',
         flexDirection: 'column', // Make the container a flex container to position the footer at the bottom
@@ -55,3 +52,4 @@ export default function Home() {
         </div>
     );
 }
+
