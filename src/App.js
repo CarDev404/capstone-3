@@ -26,22 +26,25 @@ function App() {
   };
 
   useEffect(() => {
-    console.log(user);
-    fetch(`http://localhost:4000/users/details`, {
-      method: 'GET', // Ensure it's a GET request
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
+    fetchUserData();
+
+    // Fetch user details function
+    async function fetchUserData() {
+      try {
+        const response = await fetch(`http://localhost:4000/users/details`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        if (typeof data._id !== 'undefined') {
+
+        const data = await response.json();
+
+        if (data._id) {
           setUser({
             id: data._id,
             isAdmin: data.isAdmin,
@@ -52,14 +55,14 @@ function App() {
             isAdmin: null,
           });
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error fetching user details:', error);
         setUser({
           id: null,
           isAdmin: null,
         });
-      });
+      }
+    }
   }, []);
 
   return (
@@ -81,14 +84,12 @@ function App() {
             <Route path="/admin/add-product" element={<AddProduct />} />
             <Route path="/admin/user-orders" element={<UserOrders />} />
             <Route path="*" element={<Error />} />
-          </
+          </Routes>
+        </div>
+      </Router>
+    </UserProvider>
+  );
+}
 
-
-
-
-
-
-
-
-
+export default App;
 

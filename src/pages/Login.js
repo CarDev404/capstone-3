@@ -16,20 +16,20 @@ export default function Login(props) {
         fetch(`http://localhost:4000/users/login`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 email: email,
-                password: password
-            })
+                password: password,
+            }),
         })
-        .then(res => {
+        .then((res) => {
             if (!res.ok) {
                 throw new Error('Network response was not ok');
             }
             return res.json();
         })
-        .then(data => {
+        .then((data) => {
             console.log(data);
 
             if (typeof data.access !== "undefined") {
@@ -37,13 +37,13 @@ export default function Login(props) {
                 retrieveUserDetails(data.access);
 
                 Swal.fire({
-                    title: "Login Successful!",
+                    title: "Login Successful",
                     icon: "success",
-                    text: "Welcome to LuxeHavin"
+                    text: "Welcome to LuxeHavin",
                 });
 
                 setUser({
-                    access: localStorage.getItem('token')
+                    access: localStorage.getItem('token'),
                 });
 
                 alert("You are now logged in");
@@ -51,11 +51,11 @@ export default function Login(props) {
                 Swal.fire({
                     title: "Authentication Failed",
                     icon: "error",
-                    text: "Check your login details and try again"
+                    text: "Check your login details and try again",
                 });
             }
         })
-        .catch(error => {
+        .catch((error) => {
             console.error('Network error:', error);
             // Handle the error, e.g., show an error message to the user
         });
@@ -67,16 +67,16 @@ export default function Login(props) {
     const retrieveUserDetails = (token) => {
         fetch('http://localhost:4000/users/details', {
             headers: {
-                Authorization: `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+            },
         })
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
             console.log(data);
 
             setUser({
                 id: data._id,
-                isAdmin: data.isAdmin
+                isAdmin: data.isAdmin,
             });
         });
     }
@@ -90,7 +90,7 @@ export default function Login(props) {
     }, [email, password]);
 
     return (
-        (user.id !== null) ? (
+        user.id ? (
             <Navigate to="/product" />
         ) : (
             <Form onSubmit={(e) => authenticate(e)}>
@@ -129,3 +129,4 @@ export default function Login(props) {
         )
     );
 }
+
