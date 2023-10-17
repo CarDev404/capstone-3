@@ -1,6 +1,5 @@
-// This is the App.js
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; // Import Link
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { UserProvider } from './UserContext';
 import AppNavbar from './components/AppNavbar';
 import Home from './pages/Home';
@@ -14,7 +13,7 @@ import AddProduct from './pages/AddProduct';
 import ProductView from './pages/ProductView';
 import OrderForm from './pages/OrderForm';
 import AdminView from './components/AdminView';
-import UserOrders from './components/UserOrders'; // Import UserOrders component
+import UserOrders from './components/UserOrders';
 
 function App() {
   const [user, setUser] = useState({
@@ -29,11 +28,17 @@ function App() {
   useEffect(() => {
     console.log(user);
     fetch(`http://localhost:4000/users/details`, {
+      method: 'GET', // Ensure it's a GET request
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return res.json();
+      })
       .then((data) => {
         console.log(data);
         if (typeof data._id !== 'undefined') {
@@ -47,6 +52,13 @@ function App() {
             isAdmin: null,
           });
         }
+      })
+      .catch((error) => {
+        console.error('Error fetching user details:', error);
+        setUser({
+          id: null,
+          isAdmin: null,
+        });
       });
   }, []);
 
@@ -67,16 +79,10 @@ function App() {
             <Route path="/checkout/:productId" element={<OrderForm />} />
             <Route path="/admin" element={<AdminView />} />
             <Route path="/admin/add-product" element={<AddProduct />} />
-            <Route path="/admin/user-orders" element={<UserOrders />} /> {/* Add UserOrders route */}
+            <Route path="/admin/user-orders" element={<UserOrders />} />
             <Route path="*" element={<Error />} />
-          </Routes>
-        </div>
-      </Router>
-    </UserProvider>
-  );
-}
+          </
 
-export default App;
 
 
 
